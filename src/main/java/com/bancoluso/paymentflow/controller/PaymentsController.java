@@ -2,6 +2,7 @@ package com.bancoluso.paymentflow.controller;
 
 import com.bancoluso.paymentflow.domain.model.Payment;
 import com.bancoluso.paymentflow.domain.reponse.PaymentResponse;
+import com.bancoluso.paymentflow.domain.reponse.PaymentStatusResponse;
 import com.bancoluso.paymentflow.domain.request.PaymentEventRequest;
 import com.bancoluso.paymentflow.mapper.PaymentMapper;
 import com.bancoluso.paymentflow.service.PaymentsService;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/payments")
 public class PaymentsController {
+    public static final String EVENTS_PATH = "/events";
+    public static final String PAYMENT_STATUS_PATH = EVENTS_PATH + "/{referenceId}/status";
     private final PaymentsService paymentsService;
     private final PaymentMapper paymentMapper;
 
@@ -18,9 +21,15 @@ public class PaymentsController {
         this.paymentMapper = paymentMapper;
     }
 
-    @PostMapping("/events")
+    @PostMapping(EVENTS_PATH)
     public PaymentResponse ingestPaymentEvent(@RequestBody PaymentEventRequest request) {
         Payment ingestionResult = paymentsService.ingestPaymentEvent(paymentMapper.toPaymentModel(request));
         return paymentMapper.toPaymentResponse(ingestionResult);
+    }
+
+    @GetMapping(PAYMENT_STATUS_PATH)
+    public PaymentStatusResponse getPaymentByReferenceId(@PathVariable String referenceId) {
+        Payment payment = paymentsService.getPaymentByReferenceId(referenceId);
+        return paymentMapper.toPaymentStatusResponse(payment);
     }
 }

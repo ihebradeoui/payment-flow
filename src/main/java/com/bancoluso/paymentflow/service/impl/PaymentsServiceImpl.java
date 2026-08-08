@@ -1,6 +1,7 @@
 package com.bancoluso.paymentflow.service.impl;
 
-import com.bancoluso.paymentflow.Repository.PaymentsRepository;
+import com.bancoluso.paymentflow.exception.PaymentNotFoundException;
+import com.bancoluso.paymentflow.repository.PaymentsRepository;
 import com.bancoluso.paymentflow.domain.entity.PaymentEntity;
 import com.bancoluso.paymentflow.domain.model.Payment;
 import com.bancoluso.paymentflow.mapper.PaymentMapper;
@@ -32,6 +33,16 @@ public class PaymentsServiceImpl implements PaymentsService {
             processedPaymentEntityEntity = processPaymentUpdate(paymentMapper.toPaymentModel(paymentEntity), request);
         return paymentMapper.toPaymentModel(processedPaymentEntityEntity);
 
+    }
+
+    @Override
+    public Payment getPaymentByReferenceId(String referenceId) {
+        PaymentEntity paymentEntity = paymentsRepository.getPaymentByReferenceId(referenceId);
+        if (paymentEntity == null) {
+            log.warn("Payment with reference id {} does not exist.", referenceId);
+            throw new PaymentNotFoundException(String.format("Payment with reference id %s does not exist", referenceId));
+        }
+        return paymentMapper.toPaymentModel(paymentEntity);
     }
 
     private PaymentEntity processPaymentUpdate(Payment existingPayment, Payment newPayment) {
