@@ -1,10 +1,9 @@
 package com.bancoluso.paymentflow.repository;
 
 import com.bancoluso.paymentflow.domain.entity.PaymentEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.UUID;
-
-public interface PaymentsRepository extends CrudRepository<PaymentEntity, Long> {
+public interface PaymentsRepository extends JpaRepository<PaymentEntity, Long> {
     PaymentEntity getPaymentByReferenceId(String referenceId);
+
 }

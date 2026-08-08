@@ -1,5 +1,6 @@
 package com.bancoluso.paymentflow.service.impl;
 
+import com.bancoluso.paymentflow.domain.model.PaymentsPage;
 import com.bancoluso.paymentflow.exception.PaymentNotFoundException;
 import com.bancoluso.paymentflow.repository.PaymentsRepository;
 import com.bancoluso.paymentflow.domain.entity.PaymentEntity;
@@ -7,6 +8,8 @@ import com.bancoluso.paymentflow.domain.model.Payment;
 import com.bancoluso.paymentflow.mapper.PaymentMapper;
 import com.bancoluso.paymentflow.service.PaymentsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -43,6 +46,12 @@ public class PaymentsServiceImpl implements PaymentsService {
             throw new PaymentNotFoundException(String.format("Payment with reference id %s does not exist", referenceId));
         }
         return paymentMapper.toPaymentModel(paymentEntity);
+    }
+
+    @Override
+    public PaymentsPage getPayments(int page, int size) {
+        Page<Payment> payments = paymentsRepository.findAll(Pageable.ofSize(size).withPage(page-1)).map(paymentMapper::toPaymentModel);
+        return paymentMapper.pageToPaymentsPage(payments);
     }
 
     private PaymentEntity processPaymentUpdate(Payment existingPayment, Payment newPayment) {
