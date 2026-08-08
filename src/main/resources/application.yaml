@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: payment-flow
+  datasource:
+    url: jdbc:postgres://localhost:3306/payment_db
+    username: <user>
+    password: <password>
