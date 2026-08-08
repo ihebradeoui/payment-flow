@@ -5,3 +5,15 @@ spring:
     url: jdbc:postgres://localhost:3306/payment_db
     username: <user>
     password: <password>
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+server:
+  servlet:
+    context-path: /v1
+
+
+
+
+
