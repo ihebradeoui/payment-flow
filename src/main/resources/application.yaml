@@ -2,9 +2,9 @@ spring:
   application:
     name: payment-flow
   datasource:
-    url: jdbc:postgres://localhost:3306/payment_db
-    username: <user>
-    password: <password>
+    url: jdbc:postgresql://localhost:5432/flowdb
+    username: postgres
+    password: 123
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
